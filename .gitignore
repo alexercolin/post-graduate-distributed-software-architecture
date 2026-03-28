@@ -1,0 +1,68 @@
+# Dependencies
+node_modules/
+vendor/
+.venv/
+venv/
+env/
+__pypackages__/
+
+# Build outputs
+dist/
+build/
+out/
+target/
+bin/
+*.class
+*.jar
+*.war
+*.o
+*.so
+*.dylib
+
+# Package manager files
+*.lock
+!package-lock.json
+!yarn.lock
+!pnpm-lock.yaml
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment / Secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Coverage / Testing
+coverage/
+.nyc_output/
+htmlcov/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+.cache/
+tmp/
+temp/
+*.tmp
