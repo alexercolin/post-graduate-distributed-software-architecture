@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./index.module.css";
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w300";
@@ -12,6 +13,7 @@ interface MovieItemProps {
 }
 
 export const MovieItem = ({
+  id,
   title,
   overview,
   poster_path,
@@ -28,6 +30,9 @@ export const MovieItem = ({
           <span>{release_date}</span>
           <span>⭐ {vote_average.toFixed(1)}</span>
         </div>
+        <Link to={`/movies/${id}`} className={styles.detailsButton}>
+          Ver detalhes
+        </Link>
       </div>
     </div>
   );

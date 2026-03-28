@@ -40,3 +40,20 @@
   font-size: 0.85rem;
   color: #999;
 }
+
+.detailsButton {
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  text-align: center;
+  background: #1a1a2e;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: background 0.2s;
+}
+
+.detailsButton:hover {
+  background: #16213e;
+}

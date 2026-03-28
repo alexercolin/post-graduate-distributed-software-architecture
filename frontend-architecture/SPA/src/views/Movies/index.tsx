@@ -1,5 +1,5 @@
 import styles from "./index.module.css";
-import { useMovies, useMovie } from "../../hooks/useMovies";
+import { useMovies } from "../../hooks/useMovies";
 import { MovieItem } from "../../components/MovieItem";
 
 export const Movies = () => {
