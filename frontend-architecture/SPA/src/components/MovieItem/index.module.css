@@ -1,0 +1,42 @@
+.movieCard {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.movieCard:hover {
+  transform: scale(1.03);
+}
+
+.movieCard img {
+  width: 100%;
+  display: block;
+}
+
+.movieCardContent {
+  padding: 1rem;
+}
+
+.movieCardContent h2 {
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem;
+}
+
+.movieCardContent p {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0 0 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.movieCardFooter {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #999;
+}
