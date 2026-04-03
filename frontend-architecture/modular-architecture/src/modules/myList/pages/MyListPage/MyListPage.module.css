@@ -1,0 +1,26 @@
+.page {
+  padding: 2rem;
+}
+
+.page h1 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  color: #111;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: #aaa;
+}
+
+.empty p {
+  margin: 0.4rem 0;
+  font-size: 1rem;
+}

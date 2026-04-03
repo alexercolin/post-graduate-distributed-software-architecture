@@ -1,0 +1,18 @@
+.btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.5rem 0.65rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.btn:hover { border-color: #e63946; color: #e63946; }
+
+.btn.liked {
+  color: #e63946;
+  border-color: #e63946;
+  background: #fff0f1;
+}
