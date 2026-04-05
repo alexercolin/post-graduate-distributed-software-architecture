@@ -1,0 +1,27 @@
+.microfrontend {
+  border-radius: 20px;
+  padding: 28px;
+  min-height: 240px;
+}
+
+.microfrontend--movies {
+  color: #e2e8f0;
+  background:
+    linear-gradient(180deg, rgba(249, 115, 22, 0.2), rgba(15, 23, 42, 0.92)),
+    #111827;
+  border: 1px solid rgba(251, 146, 60, 0.35);
+}
+
+.microfrontend__label {
+  margin: 0 0 8px;
+  color: #fdba74;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.microfrontend__facts {
+  margin: 20px 0 0;
+  padding-left: 20px;
+}
