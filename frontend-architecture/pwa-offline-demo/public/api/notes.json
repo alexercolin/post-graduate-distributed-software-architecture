@@ -1,0 +1,50 @@
+[
+  {
+    "id": "seed-1",
+    "title": "O que e uma PWA?",
+    "content": "Progressive Web App (PWA) e uma aplicacao web que usa tecnologias modernas para entregar experiencias similares a apps nativos. As tres pilares sao: Service Workers, Web App Manifest e HTTPS.",
+    "category": "conceitos",
+    "createdAt": "2024-01-15T10:00:00.000Z",
+    "updatedAt": "2024-01-15T10:00:00.000Z"
+  },
+  {
+    "id": "seed-2",
+    "title": "Service Worker Lifecycle",
+    "content": "O ciclo de vida do Service Worker tem 3 fases principais: Install (precache de assets), Activate (limpeza de caches antigos) e Fetch (interceptacao de requests). O SW roda em uma thread separada do main thread.",
+    "category": "service-worker",
+    "createdAt": "2024-01-15T11:00:00.000Z",
+    "updatedAt": "2024-01-15T11:00:00.000Z"
+  },
+  {
+    "id": "seed-3",
+    "title": "Estrategia Cache-First",
+    "content": "Cache-First verifica o cache antes da rede. Ideal para assets estaticos (JS, CSS, imagens) que nao mudam frequentemente. Vantagem: resposta instantanea. Desvantagem: pode servir conteudo desatualizado.",
+    "category": "cache",
+    "createdAt": "2024-01-15T12:00:00.000Z",
+    "updatedAt": "2024-01-15T12:00:00.000Z"
+  },
+  {
+    "id": "seed-4",
+    "title": "Estrategia Network-First",
+    "content": "Network-First tenta a rede primeiro e usa o cache como fallback. Ideal para dados dinamicos (APIs). Vantagem: sempre tenta buscar o mais recente. Desvantagem: mais lento quando online pois espera a rede.",
+    "category": "cache",
+    "createdAt": "2024-01-15T13:00:00.000Z",
+    "updatedAt": "2024-01-15T13:00:00.000Z"
+  },
+  {
+    "id": "seed-5",
+    "title": "Stale-While-Revalidate",
+    "content": "Retorna o cache imediatamente (stale) enquanto busca uma versao atualizada da rede em background. Combina velocidade do cache com frescor da rede. Ideal para conteudo que muda, mas onde velocidade importa.",
+    "category": "cache",
+    "createdAt": "2024-01-15T14:00:00.000Z",
+    "updatedAt": "2024-01-15T14:00:00.000Z"
+  },
+  {
+    "id": "seed-6",
+    "title": "IndexedDB para Offline",
+    "content": "IndexedDB e um banco de dados no navegador, ideal para armazenar dados estruturados offline. Diferente do localStorage, e assincrono e suporta grandes volumes de dados. PWAs usam IndexedDB para persistir dados do usuario offline.",
+    "category": "offline",
+    "createdAt": "2024-01-15T15:00:00.000Z",
+    "updatedAt": "2024-01-15T15:00:00.000Z"
+  }
+]
