@@ -1,0 +1,19 @@
+{
+  "entries": ["assembly/index.ts"],
+  "targets": {
+    "release": {
+      "outFile": "public/wasm/module.wasm",
+      "textFile": "public/wasm/module.wat",
+      "optimize": true,
+      "runtime": "stub",
+      "exportStart": true
+    },
+    "debug": {
+      "outFile": "public/wasm/module.wasm",
+      "textFile": "public/wasm/module.wat",
+      "debug": true,
+      "runtime": "stub",
+      "exportStart": true
+    }
+  }
+}
