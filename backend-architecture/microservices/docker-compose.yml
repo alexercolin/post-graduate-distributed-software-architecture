@@ -1,0 +1,95 @@
+# Educational microservices stack.
+# Goal: one command brings up redis + 3 polyglot services with NO per-service Dockerfile.
+# Each service uses an official base image and runs straight from the bind-mounted source.
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    # Not exposed to the host — internal to the docker network. Use
+    # `docker compose exec redis redis-cli` to inspect from outside.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 2s
+      retries: 10
+
+  catalog-service:
+    image: python:3.12-slim
+    container_name: catalog-service
+    working_dir: /app
+    volumes:
+      - ./catalog-service:/app
+    environment:
+      REDIS_URL: redis://redis:6379
+      PORT: "8001"
+      PYTHONUNBUFFERED: "1"
+    command:
+      - bash
+      - -c
+      - |
+        pip install --quiet --no-cache-dir fastapi 'uvicorn[standard]' 'redis>=5' httpx
+        exec uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+    ports:
+      - "${CATALOG_HOST_PORT:-8001}:8001"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  orders-service:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: orders-service
+    working_dir: /app
+    volumes:
+      - ./orders-service:/app
+      - orders-nuget:/root/.nuget
+      - orders-bin:/app/bin
+      - orders-obj:/app/obj
+    environment:
+      REDIS_URL: redis:6379
+      CATALOG_URL: http://catalog-service:8001
+      ASPNETCORE_URLS: http://0.0.0.0:8002
+      PAYMENT_FAIL_RATE: "${PAYMENT_FAIL_RATE:-0.0}"
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+    command:
+      - bash
+      - -c
+      - |
+        dotnet restore
+        exec dotnet watch run --no-launch-profile
+    ports:
+      - "${ORDERS_HOST_PORT:-8002}:8002"
+    depends_on:
+      redis:
+        condition: service_healthy
+      catalog-service:
+        condition: service_started
+
+  api-gateway:
+    image: node:20-alpine
+    container_name: api-gateway
+    working_dir: /app
+    volumes:
+      - ./api-gateway:/app
+      - gateway-node-modules:/app/node_modules
+    environment:
+      CATALOG_URL: http://catalog-service:8001
+      ORDERS_URL: http://orders-service:8002
+      PORT: "3000"
+    command:
+      - sh
+      - -c
+      - |
+        npm install --silent
+        exec npm run dev
+    ports:
+      - "${GATEWAY_HOST_PORT:-3000}:3000"
+    depends_on:
+      - catalog-service
+      - orders-service
+
+volumes:
+  orders-nuget:
+  orders-bin:
+  orders-obj:
+  gateway-node-modules:

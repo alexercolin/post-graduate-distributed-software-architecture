@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>OrdersService</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Polly v8 + HttpClient integration. Brings AddResilienceHandler, AddCircuitBreaker, AddConcurrencyLimiter. -->
+    <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.10.0" />
+    <!-- Redis Streams publisher. -->
+    <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
+  </ItemGroup>
+
+</Project>
