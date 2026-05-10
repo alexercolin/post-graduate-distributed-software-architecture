@@ -37,7 +37,11 @@ A real client would generate stubs from `src/tasks.proto`. For an ad-hoc poke, [
 ```proto
 service TaskService {
   rpc ListTasks  (ListTasksRequest)  returns (ListTasksResponse);
+  rpc GetTask    (GetTaskRequest)    returns (Task);
   rpc CreateTask (CreateTaskRequest) returns (Task);
+  rpc UpdateTask (UpdateTaskRequest) returns (Task);
+  rpc PatchTask  (PatchTaskRequest)  returns (Task);
+  rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse);
 }
 
 message Task {

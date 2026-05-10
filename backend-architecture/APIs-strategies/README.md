@@ -1,6 +1,6 @@
 # API Strategies — Five Ways to Expose the Same Domain
 
-Five minimal Node.js + TypeScript demos, each solving the **same trivial problem** — list and create `Task { id, title, done }` items in an in-memory store — using a different API strategy. The shared domain is deliberate: the *only* thing that changes between folders is the API style.
+Five minimal Node.js + TypeScript demos, each solving the **same trivial problem** — full CRUD on `Task { id, title, done }` items in an in-memory store — using a different API strategy. Every demo supports list, get-by-id, create, full update, partial update, and delete. The shared domain is deliberate: the *only* thing that changes between folders is the API style.
 
 | Folder        | Strategy        | Endpoint                          | Best for                                       |
 |---------------|-----------------|-----------------------------------|------------------------------------------------|

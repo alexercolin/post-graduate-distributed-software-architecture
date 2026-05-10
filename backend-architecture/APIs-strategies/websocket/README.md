@@ -37,13 +37,20 @@ The WebSocket endpoint is `ws://localhost:3000/ws`.
 Client → Server:
 ```json
 { "type": "list" }
+{ "type": "get",    "id": 1 }
 { "type": "create", "title": "Buy milk" }
+{ "type": "update", "id": 1, "title": "Buy oat milk", "done": false }
+{ "type": "patch",  "id": 1, "done": true }
+{ "type": "delete", "id": 1 }
 ```
 
 Server → Client:
 ```json
 { "type": "snapshot",     "tasks": [ ... ] }
+{ "type": "task",         "task":  { ... } }
 { "type": "task_created", "task":  { "id": 1, "title": "Buy milk", "done": false } }
+{ "type": "task_updated", "task":  { "id": 1, "title": "Buy oat milk", "done": true } }
+{ "type": "task_deleted", "id": 1 }
 { "type": "error",        "message": "Title required" }
 ```
 

@@ -4,7 +4,11 @@ package tasks;
 
 service TaskService {
   rpc ListTasks  (ListTasksRequest)  returns (ListTasksResponse);
+  rpc GetTask    (GetTaskRequest)    returns (Task);
   rpc CreateTask (CreateTaskRequest) returns (Task);
+  rpc UpdateTask (UpdateTaskRequest) returns (Task);
+  rpc PatchTask  (PatchTaskRequest)  returns (Task);
+  rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse);
 }
 
 message Task {
@@ -16,4 +20,9 @@ message Task {
 message ListTasksRequest  {}
 message ListTasksResponse { repeated Task tasks = 1; }
 
+message GetTaskRequest    { int32 id = 1; }
 message CreateTaskRequest { string title = 1; }
+message UpdateTaskRequest { int32 id = 1; string title = 2; bool done = 3; }
+message PatchTaskRequest  { int32 id = 1; optional string title = 2; optional bool done = 3; }
+message DeleteTaskRequest { int32 id = 1; }
+message DeleteTaskResponse { bool deleted = 1; }

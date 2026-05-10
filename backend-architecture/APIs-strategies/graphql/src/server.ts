@@ -10,14 +10,44 @@ let nextId = 1;
 
 const root = {
   tasks: () => tasks,
+
+  task: ({ id }: { id: number }) => tasks.find((t) => t.id === id) ?? null,
+
   createTask: ({ title }: { title: string }) => {
     const trimmed = title.trim();
-    if (trimmed.length === 0) {
-      throw new Error("Title required");
-    }
+    if (trimmed.length === 0) throw new Error("Title required");
     const task: Task = { id: nextId++, title: trimmed, done: false };
     tasks.push(task);
     return task;
+  },
+
+  updateTask: ({ id, title, done }: { id: number; title: string; done: boolean }) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return null;
+    const trimmed = title.trim();
+    if (trimmed.length === 0) throw new Error("Title required");
+    task.title = trimmed;
+    task.done = done;
+    return task;
+  },
+
+  patchTask: ({ id, title, done }: { id: number; title?: string; done?: boolean }) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return null;
+    if (title !== undefined) {
+      const trimmed = title.trim();
+      if (trimmed.length === 0) throw new Error("Title required");
+      task.title = trimmed;
+    }
+    if (done !== undefined) task.done = done;
+    return task;
+  },
+
+  deleteTask: ({ id }: { id: number }) => {
+    const idx = tasks.findIndex((t) => t.id === id);
+    if (idx === -1) return false;
+    tasks.splice(idx, 1);
+    return true;
   },
 };
 

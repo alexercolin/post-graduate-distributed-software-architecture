@@ -29,6 +29,18 @@ const handlers = {
     callback(null, { tasks });
   },
 
+  GetTask: (
+    call: grpc.ServerUnaryCall<{ id: number }, Task>,
+    callback: grpc.sendUnaryData<Task>
+  ) => {
+    const task = tasks.find((t) => t.id === call.request.id);
+    if (!task) {
+      callback({ code: grpc.status.NOT_FOUND, message: "Task not found" });
+      return;
+    }
+    callback(null, task);
+  },
+
   CreateTask: (
     call: grpc.ServerUnaryCall<{ title: string }, Task>,
     callback: grpc.sendUnaryData<Task>
@@ -41,6 +53,59 @@ const handlers = {
     const task: Task = { id: nextId++, title, done: false };
     tasks.push(task);
     callback(null, task);
+  },
+
+  UpdateTask: (
+    call: grpc.ServerUnaryCall<{ id: number; title: string; done: boolean }, Task>,
+    callback: grpc.sendUnaryData<Task>
+  ) => {
+    const task = tasks.find((t) => t.id === call.request.id);
+    if (!task) {
+      callback({ code: grpc.status.NOT_FOUND, message: "Task not found" });
+      return;
+    }
+    const title = (call.request.title ?? "").trim();
+    if (title.length === 0) {
+      callback({ code: grpc.status.INVALID_ARGUMENT, message: "Title required" });
+      return;
+    }
+    task.title = title;
+    task.done = call.request.done;
+    callback(null, task);
+  },
+
+  PatchTask: (
+    call: grpc.ServerUnaryCall<{ id: number; title?: string; done?: boolean }, Task>,
+    callback: grpc.sendUnaryData<Task>
+  ) => {
+    const task = tasks.find((t) => t.id === call.request.id);
+    if (!task) {
+      callback({ code: grpc.status.NOT_FOUND, message: "Task not found" });
+      return;
+    }
+    if (call.request.title !== undefined && call.request.title !== "") {
+      const title = call.request.title.trim();
+      if (title.length === 0) {
+        callback({ code: grpc.status.INVALID_ARGUMENT, message: "Title required" });
+        return;
+      }
+      task.title = title;
+    }
+    if (call.request.done !== undefined) task.done = call.request.done;
+    callback(null, task);
+  },
+
+  DeleteTask: (
+    call: grpc.ServerUnaryCall<{ id: number }, { deleted: boolean }>,
+    callback: grpc.sendUnaryData<{ deleted: boolean }>
+  ) => {
+    const idx = tasks.findIndex((t) => t.id === call.request.id);
+    if (idx === -1) {
+      callback({ code: grpc.status.NOT_FOUND, message: "Task not found" });
+      return;
+    }
+    tasks.splice(idx, 1);
+    callback(null, { deleted: true });
   },
 };
 

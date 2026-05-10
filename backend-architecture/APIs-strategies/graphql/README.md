@@ -38,15 +38,28 @@ npm run dev
 ```graphql
 type Task { id: Int!  title: String!  done: Boolean! }
 
-type Query    { tasks: [Task!]! }
-type Mutation { createTask(title: String!): Task! }
+type Query {
+  tasks: [Task!]!
+  task(id: Int!): Task
+}
+
+type Mutation {
+  createTask(title: String!): Task!
+  updateTask(id: Int!, title: String!, done: Boolean!): Task
+  patchTask(id: Int!, title: String, done: Boolean): Task
+  deleteTask(id: Int!): Boolean!
+}
 ```
 
-Sample query:
+Sample queries:
 
 ```graphql
 query    { tasks { id title done } }
+query    { task(id: 1) { id title done } }
 mutation { createTask(title: "Buy milk") { id title } }
+mutation { updateTask(id: 1, title: "Buy oat milk", done: false) { id title done } }
+mutation { patchTask(id: 1, done: true) { id title done } }
+mutation { deleteTask(id: 1) }
 ```
 
 ## File map

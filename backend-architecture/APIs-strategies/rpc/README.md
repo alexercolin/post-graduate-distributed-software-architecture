@@ -4,7 +4,7 @@ A tiny Task-list server that demonstrates the **JSON-RPC 2.0** API strategy: a s
 
 ## What JSON-RPC emphasizes
 
-- **Methods, not resources.** The contract is `tasks.list`, `tasks.create` — the URL is just a transport detail.
+- **Methods, not resources.** The contract is `tasks.list`, `tasks.get`, `tasks.create`, etc. — the URL is just a transport detail.
 - **One endpoint, one envelope.** Every request is `POST /rpc` with `{ jsonrpc: "2.0", method, params, id }`. Every response is `{ jsonrpc: "2.0", result | error, id }`.
 - **Transport-agnostic.** The same envelope works over HTTP, WebSocket, raw TCP, or stdio — only the body matters.
 - **Standard error codes.** `-32600` Invalid Request, `-32601` Method not found, `-32602` Invalid params, `-32603` Internal, plus a free range for application errors.
@@ -34,10 +34,14 @@ The server listens on `http://localhost:3000/rpc`.
 
 ## Methods
 
-| Method          | Params              | Result        | Error              |
-|-----------------|---------------------|---------------|--------------------|
-| `tasks.list`    | —                   | `Task[]`      | —                  |
-| `tasks.create`  | `{ title: string }` | `Task`        | `-32602` on empty  |
+| Method          | Params                                    | Result             | Error                    |
+|-----------------|-------------------------------------------|--------------------|--------------------------|
+| `tasks.list`    | —                                         | `Task[]`           | —                        |
+| `tasks.get`     | `{ id: number }`                          | `Task`             | `-32602` not found       |
+| `tasks.create`  | `{ title: string }`                       | `Task`             | `-32602` on empty title  |
+| `tasks.update`  | `{ id: number, title: string, done: bool }`| `Task`            | `-32602` not found/empty |
+| `tasks.patch`   | `{ id: number, title?: string, done?: bool }`| `Task`          | `-32602` not found/empty |
+| `tasks.delete`  | `{ id: number }`                          | `{ deleted: true }`| `-32602` not found       |
 
 ## Sample request / response
 

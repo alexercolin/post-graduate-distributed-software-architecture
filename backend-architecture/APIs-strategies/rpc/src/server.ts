@@ -7,15 +7,48 @@ let nextId = 1;
 
 const methods: Record<string, (params: any) => unknown> = {
   "tasks.list": () => tasks,
+
+  "tasks.get": (params: { id?: number }) => {
+    const task = tasks.find((t) => t.id === params?.id);
+    if (!task) throw new RpcError(-32602, "Invalid params: task not found");
+    return task;
+  },
+
   "tasks.create": (params: { title?: string }) => {
     const title = (params?.title ?? "").trim();
-    if (title.length === 0) {
-      // Thrown errors are caught below and returned in the JSON-RPC error envelope.
-      throw new RpcError(-32602, "Invalid params: title required");
-    }
+    if (title.length === 0) throw new RpcError(-32602, "Invalid params: title required");
     const task: Task = { id: nextId++, title, done: false };
     tasks.push(task);
     return task;
+  },
+
+  "tasks.update": (params: { id?: number; title?: string; done?: boolean }) => {
+    const task = tasks.find((t) => t.id === params?.id);
+    if (!task) throw new RpcError(-32602, "Invalid params: task not found");
+    const title = (params?.title ?? "").trim();
+    if (title.length === 0) throw new RpcError(-32602, "Invalid params: title required");
+    task.title = title;
+    task.done = Boolean(params?.done ?? false);
+    return task;
+  },
+
+  "tasks.patch": (params: { id?: number; title?: string; done?: boolean }) => {
+    const task = tasks.find((t) => t.id === params?.id);
+    if (!task) throw new RpcError(-32602, "Invalid params: task not found");
+    if (params?.title !== undefined) {
+      const title = params.title.trim();
+      if (title.length === 0) throw new RpcError(-32602, "Invalid params: title required");
+      task.title = title;
+    }
+    if (params?.done !== undefined) task.done = Boolean(params.done);
+    return task;
+  },
+
+  "tasks.delete": (params: { id?: number }) => {
+    const idx = tasks.findIndex((t) => t.id === params?.id);
+    if (idx === -1) throw new RpcError(-32602, "Invalid params: task not found");
+    tasks.splice(idx, 1);
+    return { deleted: true };
   },
 };
 

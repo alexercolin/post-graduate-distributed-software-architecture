@@ -5,7 +5,11 @@ import { WebSocketServer, type WebSocket } from "ws";
 type Task = { id: number; title: string; done: boolean };
 type ClientMessage =
   | { type: "list" }
-  | { type: "create"; title: string };
+  | { type: "get"; id: number }
+  | { type: "create"; title: string }
+  | { type: "update"; id: number; title: string; done: boolean }
+  | { type: "patch"; id: number; title?: string; done?: boolean }
+  | { type: "delete"; id: number };
 
 const tasks: Task[] = [];
 let nextId = 1;
@@ -41,6 +45,16 @@ wss.on("connection", (socket) => {
       return;
     }
 
+    if (msg.type === "get") {
+      const task = tasks.find((t) => t.id === msg.id);
+      if (!task) {
+        socket.send(JSON.stringify({ type: "error", message: "Task not found" }));
+        return;
+      }
+      socket.send(JSON.stringify({ type: "task", task }));
+      return;
+    }
+
     if (msg.type === "create") {
       const title = (msg.title ?? "").trim();
       if (title.length === 0) {
@@ -49,8 +63,54 @@ wss.on("connection", (socket) => {
       }
       const task: Task = { id: nextId++, title, done: false };
       tasks.push(task);
-      // Server-initiated push: every connected client learns about the new task.
       broadcast({ type: "task_created", task });
+      return;
+    }
+
+    if (msg.type === "update") {
+      const task = tasks.find((t) => t.id === msg.id);
+      if (!task) {
+        socket.send(JSON.stringify({ type: "error", message: "Task not found" }));
+        return;
+      }
+      const title = (msg.title ?? "").trim();
+      if (title.length === 0) {
+        socket.send(JSON.stringify({ type: "error", message: "Title required" }));
+        return;
+      }
+      task.title = title;
+      task.done = Boolean(msg.done);
+      broadcast({ type: "task_updated", task });
+      return;
+    }
+
+    if (msg.type === "patch") {
+      const task = tasks.find((t) => t.id === msg.id);
+      if (!task) {
+        socket.send(JSON.stringify({ type: "error", message: "Task not found" }));
+        return;
+      }
+      if (msg.title !== undefined) {
+        const title = msg.title.trim();
+        if (title.length === 0) {
+          socket.send(JSON.stringify({ type: "error", message: "Title required" }));
+          return;
+        }
+        task.title = title;
+      }
+      if (msg.done !== undefined) task.done = Boolean(msg.done);
+      broadcast({ type: "task_updated", task });
+      return;
+    }
+
+    if (msg.type === "delete") {
+      const idx = tasks.findIndex((t) => t.id === msg.id);
+      if (idx === -1) {
+        socket.send(JSON.stringify({ type: "error", message: "Task not found" }));
+        return;
+      }
+      tasks.splice(idx, 1);
+      broadcast({ type: "task_deleted", id: msg.id });
       return;
     }
   });
