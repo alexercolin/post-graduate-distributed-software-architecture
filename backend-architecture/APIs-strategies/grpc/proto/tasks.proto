@@ -11,18 +11,25 @@ service TaskService {
   rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse);
 }
 
-message Task {
+message Assignee {
   int32  id    = 1;
-  string title = 2;
-  bool   done  = 3;
+  string name  = 2;
+  string email = 3;
+}
+
+message Task {
+  int32    id       = 1;
+  string   title    = 2;
+  bool     done     = 3;
+  Assignee assignee = 4;
 }
 
 message ListTasksRequest  {}
 message ListTasksResponse { repeated Task tasks = 1; }
 
 message GetTaskRequest    { int32 id = 1; }
-message CreateTaskRequest { string title = 1; }
-message UpdateTaskRequest { int32 id = 1; string title = 2; bool done = 3; }
-message PatchTaskRequest  { int32 id = 1; optional string title = 2; optional bool done = 3; }
+message CreateTaskRequest { string title = 1; Assignee assignee = 2; }
+message UpdateTaskRequest { int32 id = 1; string title = 2; bool done = 3; Assignee assignee = 4; }
+message PatchTaskRequest  { int32 id = 1; optional string title = 2; optional bool done = 3; optional Assignee assignee = 4; }
 message DeleteTaskRequest { int32 id = 1; }
 message DeleteTaskResponse { bool deleted = 1; }

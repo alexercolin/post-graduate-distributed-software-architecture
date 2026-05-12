@@ -1,38 +1,21 @@
 import * as grpc from "@grpc/grpc-js";
-import * as protoLoader from "@grpc/proto-loader";
-import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
+import {
+  TaskServiceService,
+  type TaskServiceServer,
+  type Assignee,
+} from "./generated/tasks.js";
 
-type Task = { id: number; title: string; done: boolean };
+type StoredTask = { id: number; title: string; done: boolean; assignee: Assignee | undefined };
 
-const tasks: Task[] = [];
+const tasks: StoredTask[] = [];
 let nextId = 1;
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const protoPath = resolve(__dirname, "tasks.proto");
-
-const packageDefinition = protoLoader.loadSync(protoPath, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-
-const proto = grpc.loadPackageDefinition(packageDefinition) as any;
-
-const handlers = {
-  ListTasks: (
-    _call: grpc.ServerUnaryCall<unknown, { tasks: Task[] }>,
-    callback: grpc.sendUnaryData<{ tasks: Task[] }>
-  ) => {
+const handlers: TaskServiceServer = {
+  listTasks(_call, callback) {
     callback(null, { tasks });
   },
 
-  GetTask: (
-    call: grpc.ServerUnaryCall<{ id: number }, Task>,
-    callback: grpc.sendUnaryData<Task>
-  ) => {
+  getTask(call, callback) {
     const task = tasks.find((t) => t.id === call.request.id);
     if (!task) {
       callback({ code: grpc.status.NOT_FOUND, message: "Task not found" });
@@ -41,24 +24,23 @@ const handlers = {
     callback(null, task);
   },
 
-  CreateTask: (
-    call: grpc.ServerUnaryCall<{ title: string }, Task>,
-    callback: grpc.sendUnaryData<Task>
-  ) => {
+  createTask(call, callback) {
     const title = (call.request.title ?? "").trim();
     if (title.length === 0) {
       callback({ code: grpc.status.INVALID_ARGUMENT, message: "Title required" });
       return;
     }
-    const task: Task = { id: nextId++, title, done: false };
+    const task: StoredTask = {
+      id: nextId++,
+      title,
+      done: false,
+      assignee: call.request.assignee,
+    };
     tasks.push(task);
     callback(null, task);
   },
 
-  UpdateTask: (
-    call: grpc.ServerUnaryCall<{ id: number; title: string; done: boolean }, Task>,
-    callback: grpc.sendUnaryData<Task>
-  ) => {
+  updateTask(call, callback) {
     const task = tasks.find((t) => t.id === call.request.id);
     if (!task) {
       callback({ code: grpc.status.NOT_FOUND, message: "Task not found" });
@@ -71,13 +53,11 @@ const handlers = {
     }
     task.title = title;
     task.done = call.request.done;
+    task.assignee = call.request.assignee;
     callback(null, task);
   },
 
-  PatchTask: (
-    call: grpc.ServerUnaryCall<{ id: number; title?: string; done?: boolean }, Task>,
-    callback: grpc.sendUnaryData<Task>
-  ) => {
+  patchTask(call, callback) {
     const task = tasks.find((t) => t.id === call.request.id);
     if (!task) {
       callback({ code: grpc.status.NOT_FOUND, message: "Task not found" });
@@ -92,13 +72,11 @@ const handlers = {
       task.title = title;
     }
     if (call.request.done !== undefined) task.done = call.request.done;
+    if (call.request.assignee !== undefined) task.assignee = call.request.assignee;
     callback(null, task);
   },
 
-  DeleteTask: (
-    call: grpc.ServerUnaryCall<{ id: number }, { deleted: boolean }>,
-    callback: grpc.sendUnaryData<{ deleted: boolean }>
-  ) => {
+  deleteTask(call, callback) {
     const idx = tasks.findIndex((t) => t.id === call.request.id);
     if (idx === -1) {
       callback({ code: grpc.status.NOT_FOUND, message: "Task not found" });
@@ -110,7 +88,7 @@ const handlers = {
 };
 
 const server = new grpc.Server();
-server.addService(proto.tasks.TaskService.service, handlers);
+server.addService(TaskServiceService, handlers);
 
 const port = 50051;
 server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), (err) => {
@@ -118,5 +96,5 @@ server.bindAsync(`0.0.0.0:${port}`, grpc.ServerCredentials.createInsecure(), (er
     console.error(err);
     process.exit(1);
   }
-  console.log(`gRPC demo listening on 0.0.0.0:${port}`);
+  console.log(`gRPC server listening on 0.0.0.0:${port}`);
 });

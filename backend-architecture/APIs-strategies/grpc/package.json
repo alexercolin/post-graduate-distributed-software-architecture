@@ -2,17 +2,9 @@
   "name": "grpc-api-demo",
   "private": true,
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "tsx src/server.ts"
-  },
-  "dependencies": {
-    "@grpc/grpc-js": "^1.10.9",
-    "@grpc/proto-loader": "^0.7.13"
-  },
-  "devDependencies": {
-    "@types/node": "^20.12.7",
-    "tsx": "^4.7.2",
-    "typescript": "^5.4.5"
+    "proto:generate": "cd server && npm run proto:generate && cd ../client && npm run proto:generate",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev"
   }
 }
