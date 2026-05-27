@@ -1,0 +1,11 @@
+# Mesh-wide lineage. In a real platform this is derived from each
+# data_product.yaml's `depends_on:` and rendered by the catalog UI.
+edges:
+  - from: orders.orders_raw
+    to:   orders.orders_daily
+  - from: customers.customers_raw
+    to:   customers.customers_active
+  - from: orders.orders_daily
+    to:   consumer.customer_360
+  - from: customers.customers_active
+    to:   consumer.customer_360

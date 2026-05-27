@@ -1,0 +1,18 @@
+domain: consumer
+owner: analytics-team@example.com
+version: 1.0.0
+description: One row per active customer with lifetime order metrics. Powers the marketing dashboard.
+
+products:
+  - name: customer_360
+    type: consumer-aligned
+    slo:
+      freshness: 24h
+    depends_on:
+      - orders.orders_daily
+      - customers.customers_active
+    output_ports:
+      - kind: iceberg-table
+        address: iceberg.consumer.customer_360
+      - kind: sql
+        address: "SELECT * FROM iceberg.consumer.customer_360"

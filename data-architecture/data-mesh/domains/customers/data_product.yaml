@@ -1,0 +1,32 @@
+domain: customers
+owner: customers-team@example.com
+version: 1.0.0
+description: Source-of-truth for customer identities and lifecycle.
+
+products:
+  - name: customers_raw
+    type: source-aligned
+    schema: contracts/customers.schema.json
+    pii: [email]
+    slo:
+      freshness: 1h
+      completeness: ">= 99.9%"
+    depends_on: []
+    output_ports:
+      - kind: iceberg-table
+        address: iceberg.customers.customers_raw
+      - kind: sql
+        address: "trino://localhost:8080 -> iceberg.customers.customers_raw"
+
+  - name: customers_active
+    type: aggregate
+    pii: [email]
+    slo:
+      freshness: 24h
+    depends_on:
+      - customers.customers_raw
+    output_ports:
+      - kind: iceberg-table
+        address: iceberg.customers.customers_active
+      - kind: sql
+        address: "trino://localhost:8080 -> iceberg.customers.customers_active_masked  # PII-masked view"

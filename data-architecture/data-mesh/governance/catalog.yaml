@@ -1,0 +1,32 @@
+mesh: post-grad-data-mesh
+
+# Federated computational governance: rules agreed across all domains.
+global_rules:
+  - Every data product must declare an owner, SLO, schema, and at least one output port.
+  - PII fields are tagged in JSON Schema contracts (`"pii": [...]`).
+  - Non-privileged consumers must read PII through the masked view (see policies/pii_masking.sql).
+  - Producers are responsible for backward-compatible schema evolution.
+  - All data products are addressable via the Iceberg REST catalog and queryable via Trino.
+
+# Domain registry. In a real mesh this is generated from each domain's data_product.yaml.
+data_products:
+  - name: orders.orders_raw
+    type: source-aligned
+    owner: orders-team
+    pii: false
+  - name: orders.orders_daily
+    type: aggregate
+    owner: orders-team
+    pii: false
+  - name: customers.customers_raw
+    type: source-aligned
+    owner: customers-team
+    pii: true
+  - name: customers.customers_active
+    type: aggregate
+    owner: customers-team
+    pii: true
+  - name: consumer.customer_360
+    type: consumer-aligned
+    owner: analytics-team
+    pii: true
