@@ -1,0 +1,27 @@
+{
+  "name": "data-ingestion-patterns",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "kafka:producer": "tsx streaming-elt-kafka/producer.ts",
+    "kafka:consumer": "tsx streaming-elt-kafka/consumer.ts",
+    "rmq:publish": "tsx batch-etl-rabbitmq/publisher.ts",
+    "rmq:worker": "tsx batch-etl-rabbitmq/worker.ts",
+    "transform": "docker exec -i di-postgres psql -U shop -d shop < sql/elt_transform.sql",
+    "observe": "docker exec -i di-postgres psql -U shop -d shop < sql/observe.sql",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.4",
+    "kafkajs": "^2.2.4",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.5",
+    "@types/node": "^20.12.7",
+    "@types/pg": "^8.11.6",
+    "tsx": "^4.7.2",
+    "typescript": "^5.4.5"
+  }
+}
