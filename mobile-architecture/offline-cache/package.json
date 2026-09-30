@@ -1,0 +1,43 @@
+{
+  "name": "offline-cache-feed",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@react-native-community/netinfo": "12.0.1",
+    "drizzle-orm": "^0.45.2",
+    "expo": "~57.0.8",
+    "expo-background-task": "~57.0.6",
+    "expo-file-system": "~57.0.1",
+    "expo-image": "~57.0.1",
+    "expo-sqlite": "~57.0.1",
+    "expo-status-bar": "~57.0.1",
+    "expo-task-manager": "~57.0.6",
+    "react": "19.2.3",
+    "react-native": "0.86.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "babel-plugin-inline-import": "^3.0.0",
+    "babel-preset-expo": "^57.0.4",
+    "drizzle-kit": "^0.31.10",
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.10"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "private": true,
+  "description": "Offline-first image feed: local SQLite as SSOT, delta sync, outbox and LRU image cache (Expo + Drizzle)."
+}

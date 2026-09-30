@@ -1,0 +1,38 @@
+version: "3.9"
+
+networks:
+  kong-net:
+    name: kong-net
+    driver: bridge
+
+services:
+
+  servicea:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      MESSAGE: "<h1><strong>Service A</strong></h1>"
+      PORT: "8081"
+    networks:
+      - kong-net
+
+  serviceb:
+    build: .
+    ports:
+      - "8082:8082"
+    environment:
+      MESSAGE: "<h1><strong>Service B</strong></h1>"
+      PORT: "8082"
+    networks:
+      - kong-net
+
+  servicec:
+    build: .
+    ports:
+      - "8083:8083"
+    environment:
+      MESSAGE: "<h1><strong>Service C</strong></h1>"
+      PORT: "8083"
+    networks:
+      - kong-net
